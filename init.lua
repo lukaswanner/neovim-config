@@ -151,7 +151,7 @@ require('lazy').setup({
   },
 
   {
-    -- Theme inspired by Atom
+    -- own theme
     'rebelot/kanagawa.nvim',
     priority = 1000,
     config = function()
@@ -166,7 +166,7 @@ require('lazy').setup({
     opts = {
       options = {
         icons_enabled = false,
-        theme = 'onedark',
+        theme = 'kanagawa',
         component_separators = '|',
         section_separators = '',
       },
@@ -207,12 +207,45 @@ require('lazy').setup({
   },
 
   {
-    -- Highlight, edit, and navigate code
-    'nvim-treesitter/nvim-treesitter',
-    dependencies = {
-      'nvim-treesitter/nvim-treesitter-textobjects',
+    "nvim-treesitter/nvim-treesitter",
+    version = false, -- last release is way too old and doesn't work on Windows
+    build = ":TSUpdate",
+    cmd = { "TSUpdateSync", "TSUpdate", "TSInstall" },
+    ---@type TSConfig
+    ---@diagnostic disable-next-line: missing-fields
+    opts = {
+      highlight = { enable = true },
+      indent = { enable = true },
+      ensure_installed = {
+        "bash",
+        "c",
+        "diff",
+        "html",
+        "javascript",
+        "jsdoc",
+        "json",
+        "jsonc",
+        "lua",
+        "luadoc",
+        "luap",
+        "markdown",
+        "markdown_inline",
+        "python",
+        "query",
+        "regex",
+        "toml",
+        "tsx",
+        "typescript",
+        "vim",
+        "vimdoc",
+        "yaml",
+      },
     },
-    build = ':TSUpdate',
+  },
+
+  {
+    -- undo tree
+    "mbbill/undotree"
   },
 
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
@@ -246,7 +279,7 @@ vim.o.mouse = 'a'
 -- Sync clipboard between OS and Neovim.
 --  Remove this option if you want your OS clipboard to remain independent.
 --  See `:help 'clipboard'`
-vim.o.clipboard = 'unnamedplus'
+-- vim.o.clipboard = 'unnamedplus'
 
 -- Enable break indent
 vim.o.breakindent = true
@@ -381,56 +414,17 @@ vim.defer_fn(function()
     highlight = { enable = true },
     indent = { enable = true },
     incremental_selection = {
-      enable = true,
-      keymaps = {
-        init_selection = '<c-space>',
-        node_incremental = '<c-space>',
-        scope_incremental = '<c-s>',
-        node_decremental = '<M-space>',
-      },
+      enable = false,
     },
     textobjects = {
       select = {
-        enable = true,
-        lookahead = true, -- Automatically jump forward to textobj, similar to targets.vim
-        keymaps = {
-          -- You can use the capture groups defined in textobjects.scm
-          ['aa'] = '@parameter.outer',
-          ['ia'] = '@parameter.inner',
-          ['af'] = '@function.outer',
-          ['if'] = '@function.inner',
-          ['ac'] = '@class.outer',
-          ['ic'] = '@class.inner',
-        },
+        enable = false,
       },
       move = {
-        enable = true,
-        set_jumps = true, -- whether to set jumps in the jumplist
-        goto_next_start = {
-          [']m'] = '@function.outer',
-          [']]'] = '@class.outer',
-        },
-        goto_next_end = {
-          [']M'] = '@function.outer',
-          [']['] = '@class.outer',
-        },
-        goto_previous_start = {
-          ['[m'] = '@function.outer',
-          ['[['] = '@class.outer',
-        },
-        goto_previous_end = {
-          ['[M'] = '@function.outer',
-          ['[]'] = '@class.outer',
-        },
+        enable = false,
       },
       swap = {
-        enable = true,
-        swap_next = {
-          ['<leader>a'] = '@parameter.inner',
-        },
-        swap_previous = {
-          ['<leader>A'] = '@parameter.inner',
-        },
+        enable = false,
       },
     },
   }
@@ -461,6 +455,16 @@ local on_attach = function(_, bufnr)
 
   nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
   nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
+
+  -- undo tree
+  nmap('<leader>u', vim.cmd.UndotreeToggle, '[u]ndotree')
+  -- vim fugitive
+  nmap('<leader>gs', vim.cmd.Git, '[g]it [s]tart')
+  nmap('<leader>p', ': Git push', 'git [p]ush')
+  nmap('<leader>t', ':Git push -u origin ', 'Push [t]o origin');
+  -- get changes of either left or right panel when mergin stuff
+  nmap("<leader>gh", "<cmd>diffget //2<CR>", '[G]it [h]');
+  nmap("<leader>gl", "<cmd>diffget //3<CR>", '[G]it [l]');
 
   nmap('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
   nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
@@ -515,7 +519,7 @@ local servers = {
   -- clangd = {},
   -- gopls = {},
   -- pyright = {},
-  -- rust_analyzer = {},
+  rust_analyzer = {},
   -- tsserver = {},
   -- html = { filetypes = { 'html', 'twig', 'hbs'} },
 
