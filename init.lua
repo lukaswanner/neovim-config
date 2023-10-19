@@ -152,7 +152,9 @@ require('lazy').setup({
 
   {
     -- own theme
+    -- 'catppuccin/nvim',
     'rebelot/kanagawa.nvim',
+    -- 'rose-pine/neovim',
     priority = 1000,
     config = function()
       vim.cmd.colorscheme 'kanagawa'
@@ -172,6 +174,7 @@ require('lazy').setup({
       },
     },
   },
+
 
   {
     -- Add indentation guides even on blank lines
@@ -208,7 +211,6 @@ require('lazy').setup({
 
   {
     "nvim-treesitter/nvim-treesitter",
-    version = false, -- last release is way too old and doesn't work on Windows
     build = ":TSUpdate",
     cmd = { "TSUpdateSync", "TSUpdate", "TSInstall" },
     ---@type TSConfig
@@ -294,10 +296,6 @@ vim.o.smartcase = true
 -- Keep signcolumn on by default
 vim.wo.signcolumn = 'yes'
 
--- Decrease update time
-vim.o.updatetime = 250
-vim.o.timeoutlen = 300
-
 -- Set completeopt to have a better completion experience
 vim.o.completeopt = 'menuone,noselect'
 
@@ -312,7 +310,8 @@ vim.opt.scrolloff = 8
 vim.opt.signcolumn = "yes"
 vim.opt.isfname:append("@-@")
 
-vim.opt.updatetime = 50
+vim.o.updatetime = 250
+vim.o.timeoutlen = 300
 
 vim.opt.colorcolumn = "120"
 
@@ -381,51 +380,48 @@ require('telescope').setup {
 pcall(require('telescope').load_extension, 'fzf')
 
 -- See `:help telescope.builtin`
-vim.keymap.set('n', '<leader>?', require('telescope.builtin').oldfiles, { desc = '[?] Find recently opened files' })
-vim.keymap.set('n', '<leader><space>', require('telescope.builtin').buffers, { desc = '[ ] Find existing buffers' })
+local builtin = require('telescope.builtin')
+vim.keymap.set('n', '<leader>?', builtin.oldfiles, { desc = '[?] Find recently opened files' })
+vim.keymap.set('n', '<leader><space>', builtin.buffers, { desc = '[ ] Find existing buffers' })
 vim.keymap.set('n', '<leader>/', function()
-  -- You can pass additional configuration to telescope to change theme, layout, etc.
-  require('telescope.builtin').current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
-    winblend = 10,
-    previewer = false,
-  })
+  builtin.current_buffer_fuzzy_find()
 end, { desc = '[/] Fuzzily search in current buffer' })
 
-vim.keymap.set('n', '<leader>gf', require('telescope.builtin').git_files, { desc = 'Search [G]it [F]iles' })
-vim.keymap.set('n', '<leader>sf', require('telescope.builtin').find_files, { desc = '[S]earch [F]iles' })
-vim.keymap.set('n', '<leader>sh', require('telescope.builtin').help_tags, { desc = '[S]earch [H]elp' })
-vim.keymap.set('n', '<leader>sw', require('telescope.builtin').grep_string, { desc = '[S]earch current [W]ord' })
-vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
-vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
-vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = '[S]earch [R]esume' })
+vim.keymap.set('n', '<leader>gf', builtin.git_files, { desc = 'Search [G]it [F]iles' })
+vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
+vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
+vim.keymap.set('n', '<leader>sw', function()
+  builtin.grep_string({ search = vim.fn.input("Grep > ") })
+end, { desc = '[S]earch current [W]ord' })
+vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
+vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
+vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
 
 -- [[ Configure Treesitter ]]
 -- See `:help nvim-treesitter`
 -- Defer Treesitter setup after first render to improve startup time of 'nvim {filename}'
 vim.defer_fn(function()
+  ---@diagnostic disable-next-line: missing-fields
   require('nvim-treesitter.configs').setup {
-    -- Add languages to be installed here that you want installed for treesitter
-    ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim',
-      'bash' },
+    -- A list of parser names, or "all"
+    ensure_installed = { "vimdoc", "javascript", "typescript", "c", "lua", "rust" },
 
-    -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
-    auto_install = false,
+    -- Install parsers synchronously (only applied to `ensure_installed`)
+    sync_install = true,
 
-    highlight = { enable = true },
-    indent = { enable = true },
-    incremental_selection = {
-      enable = false,
-    },
-    textobjects = {
-      select = {
-        enable = false,
-      },
-      move = {
-        enable = false,
-      },
-      swap = {
-        enable = false,
-      },
+    -- Automatically install missing parsers when entering buffer
+    -- Recommendation: set to false if you don't have `tree-sitter` CLI installed locally
+    auto_install = true,
+
+    highlight = {
+      -- `false` will disable the whole extension
+      enable = true,
+
+      -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
+      -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
+      -- Using this option may slow down your editor, and you may see some duplicate highlights.
+      -- Instead of true it can also be a list of languages
+      additional_vim_regex_highlighting = false,
     },
   }
 end, 0)
@@ -435,6 +431,40 @@ vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous dia
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next diagnostic message' })
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Open floating diagnostic message' })
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostics list' })
+
+-- fugitive settings
+vim.keymap.set("n", "<leader>gs", vim.cmd.Git)
+
+local Lukas_Fugitive = vim.api.nvim_create_augroup("Lukas_Fugitive", {})
+
+local autocmd = vim.api.nvim_create_autocmd
+autocmd("BufWinEnter", {
+  group = Lukas_Fugitive,
+  pattern = "*",
+  callback = function()
+    if vim.bo.ft ~= "fugitive" then
+      return
+    end
+
+    local bufnr = vim.api.nvim_get_current_buf()
+    local opts = { buffer = bufnr, remap = false }
+    vim.keymap.set("n", "<leader>p", function()
+      vim.cmd.Git('push')
+    end, opts)
+
+    -- rebase always
+    vim.keymap.set("n", "<leader>P", function()
+      vim.cmd.Git({ 'pull', '--rebase' })
+    end, opts)
+
+    -- NOTE: It allows me to easily set the branch i am pushing and any tracking
+    -- needed if i did not set the branch up correctly
+    vim.keymap.set("n", "<leader>t", ":Git push -u origin ", opts);
+    -- get changes of either left or right panel when mergin stuff
+    vim.keymap.set("n", "<leader>gh", "<cmd>diffget //2<CR>");
+    vim.keymap.set("n", "<leader>gl", "<cmd>diffget //3<CR>");
+  end,
+})
 
 -- [[ Configure LSP ]]
 --  This function gets run when an LSP connects to a particular buffer.
@@ -459,12 +489,6 @@ local on_attach = function(_, bufnr)
   -- undo tree
   nmap('<leader>u', vim.cmd.UndotreeToggle, '[u]ndotree')
   -- vim fugitive
-  nmap('<leader>gs', vim.cmd.Git, '[g]it [s]tart')
-  nmap('<leader>p', ': Git push', 'git [p]ush')
-  nmap('<leader>t', ':Git push -u origin ', 'Push [t]o origin');
-  -- get changes of either left or right panel when mergin stuff
-  nmap("<leader>gh", "<cmd>diffget //2<CR>", '[G]it [h]');
-  nmap("<leader>gl", "<cmd>diffget //3<CR>", '[G]it [l]');
 
   nmap('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
   nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
@@ -518,9 +542,9 @@ require('mason-lspconfig').setup()
 local servers = {
   -- clangd = {},
   -- gopls = {},
-  -- pyright = {},
+  pyright = {},
   rust_analyzer = {},
-  -- tsserver = {},
+  tsserver = {},
   -- html = { filetypes = { 'html', 'twig', 'hbs'} },
 
   lua_ls = {
@@ -563,6 +587,7 @@ local luasnip = require 'luasnip'
 require('luasnip.loaders.from_vscode').lazy_load()
 luasnip.config.setup {}
 
+---@diagnostic disable-next-line: missing-fields
 cmp.setup {
   snippet = {
     expand = function(args)
