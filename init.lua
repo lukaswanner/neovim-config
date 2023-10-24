@@ -154,12 +154,22 @@ require('lazy').setup({
     -- own theme
     -- 'catppuccin/nvim',
     -- 'rebelot/kanagawa.nvim',
-    -- 'rose-pine/neovim',
-    'navarasu/onedark.nvim',
+    -- 'navarasu/onedark.nvim',
+    'rose-pine/neovim',
+    name = 'rose-pine',
+    opts = {
+      variant = "moon",
+      highlight_groups = {
+        CursorLine = { bg = 'foam', blend = 10 },
+        CursorLineNr = { fg = '#ff8800' },
+        Search = { bg = 'gold', inherit = false },
+      }
+    },
     priority = 1000,
-    config = function()
-      vim.cmd.colorscheme 'onedark'
-    end,
+    config = function(_, opts)
+      require('rose-pine').setup(opts)
+      vim.cmd.colorscheme 'rose-pine'
+    end
   },
 
   {
@@ -169,7 +179,7 @@ require('lazy').setup({
     opts = {
       options = {
         icons_enabled = false,
-        theme = 'onedark',
+        theme = 'rose-pine',
         component_separators = '|',
         section_separators = '',
       },
