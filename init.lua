@@ -153,22 +153,21 @@ require('lazy').setup({
   {
     -- own theme
     -- 'catppuccin/nvim',
-    -- 'rebelot/kanagawa.nvim',
+    'rebelot/kanagawa.nvim',
     -- 'navarasu/onedark.nvim',
-    'rose-pine/neovim',
-    name = 'rose-pine',
+    -- 'rose-pine/neovim',
+    name = 'kanagawa',
     opts = {
-      variant = "moon",
-      highlight_groups = {
-        CursorLine = { bg = 'foam', blend = 10 },
-        CursorLineNr = { fg = '#ff8800' },
-        Search = { bg = 'gold', inherit = false },
-      }
+      --   highlight_groups = {
+      --     CursorLine = { bg = 'foam', blend = 10 },
+      --     CursorLineNr = { fg = '#ff8800' },
+      --     Search = { bg = 'gold', inherit = false },
+      --   }
     },
     priority = 1000,
     config = function(_, opts)
-      require('rose-pine').setup(opts)
-      vim.cmd.colorscheme 'rose-pine'
+      require('kanagawa').setup(opts)
+      vim.cmd.colorscheme 'kanagawa'
     end
   },
 
@@ -179,7 +178,7 @@ require('lazy').setup({
     opts = {
       options = {
         icons_enabled = false,
-        theme = 'rose-pine',
+        theme = 'kanagawa',
         component_separators = '|',
         section_separators = '',
       },
@@ -277,7 +276,7 @@ vim.o.termguicolors = true
 
 -- own settings
 vim.opt.undodir = os.getenv("HOME") .. "/.vim/undodir"
-vim.opt.wrap = false
+vim.opt.wrap = true
 
 vim.opt.scrolloff = 8
 vim.opt.signcolumn = "yes"
@@ -303,6 +302,12 @@ vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
 -- center stuff
 vim.keymap.set("n", "<C-d>", "<C-d>zz")
 vim.keymap.set("n", "<C-u>", "<C-u>zz")
+
+-- Remap for dealing with word wrap
+vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
+vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
+vim.keymap.set('v', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
+vim.keymap.set('v', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 
 -- open cmd
 vim.keymap.set("n", "<leader>ex", vim.cmd.Ex)
