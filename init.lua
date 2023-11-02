@@ -367,6 +367,7 @@ vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' }
 -- See `:help nvim-treesitter`
 -- Defer Treesitter setup after first render to improve startup time of 'nvim {filename}'
 vim.defer_fn(function()
+  ---@diagnostic disable-next-line: missing-fields
   require('nvim-treesitter.configs').setup {
     -- Add languages to be installed here that you want installed for treesitter
     ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim',
@@ -469,8 +470,8 @@ autocmd("BufWinEnter", {
     -- needed if i did not set the branch up correctly
     vim.keymap.set("n", "<leader>t", ":Git push -u origin ", opts);
     -- get changes of either left or right panel when mergin stuff
-    vim.keymap.set("n", "<leader>gh", "<cmd>diffget //2<CR>");
-    vim.keymap.set("n", "<leader>gl", "<cmd>diffget //3<CR>");
+    vim.keymap.set("n", "<leader>gh", "<cmd>diffget //2<CR>", { desc = "[G]it [h] (left)" });
+    vim.keymap.set("n", "<leader>gl", "<cmd>diffget //3<CR>", { desc = "[G]it [h] (left)" });
   end,
 })
 
