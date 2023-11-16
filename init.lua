@@ -153,21 +153,19 @@ require('lazy').setup({
   {
     -- own theme
     -- 'catppuccin/nvim',
-    'rebelot/kanagawa.nvim',
+    -- 'rebelot/kanagawa.nvim',
     -- 'navarasu/onedark.nvim',
-    -- 'rose-pine/neovim',
-    name = 'kanagawa',
+    'rose-pine/neovim',
+    name = 'rose-pine',
     opts = {
-      --   highlight_groups = {
-      --     CursorLine = { bg = 'foam', blend = 10 },
-      --     CursorLineNr = { fg = '#ff8800' },
-      --     Search = { bg = 'gold', inherit = false },
-      --   }
+      highlight_groups = {
+        CursorLineNr = { fg = '#ff99cc' },
+      }
     },
     priority = 1000,
     config = function(_, opts)
-      require('kanagawa').setup(opts)
-      vim.cmd.colorscheme 'kanagawa'
+      require('rose-pine').setup(opts)
+      vim.cmd.colorscheme 'rose-pine'
     end
   },
 
@@ -178,7 +176,7 @@ require('lazy').setup({
     opts = {
       options = {
         icons_enabled = false,
-        theme = 'kanagawa',
+        theme = 'rose-pine',
         component_separators = '|',
         section_separators = '',
       },
