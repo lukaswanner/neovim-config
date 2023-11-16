@@ -123,8 +123,8 @@ require('lazy').setup({
         changedelete = { text = '~' },
       },
       on_attach = function(bufnr)
-        vim.keymap.set('n', '<leader>hp', require('gitsigns').preview_hunk,
-          { buffer = bufnr, desc = 'Git [h]unk [p]review ' })
+        vim.keymap.set('n', '<leader>gp', require('gitsigns').preview_hunk,
+          { buffer = bufnr, desc = '[G]it hunk [p]review ' })
 
         -- don't override the built-in and fugitive keymaps
         local gs = package.loaded.gitsigns
@@ -219,6 +219,10 @@ require('lazy').setup({
   {
     -- undo tree
     "mbbill/undotree"
+  },
+  {
+    -- harpoooooon it's too good to not include
+    "ThePrimeagen/harpoon"
   },
 
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
@@ -376,59 +380,6 @@ vim.defer_fn(function()
 
     highlight = { enable = true },
     indent = { enable = true },
-    incremental_selection = {
-      enable = true,
-      keymaps = {
-        init_selection = '<c-space>',
-        node_incremental = '<c-space>',
-        scope_incremental = '<c-s>',
-        node_decremental = '<M-space>',
-      },
-    },
-    textobjects = {
-      select = {
-        enable = true,
-        lookahead = true, -- Automatically jump forward to textobj, similar to targets.vim
-        keymaps = {
-          -- You can use the capture groups defined in textobjects.scm
-          ['aa'] = '@parameter.outer',
-          ['ia'] = '@parameter.inner',
-          ['af'] = '@function.outer',
-          ['if'] = '@function.inner',
-          ['ac'] = '@class.outer',
-          ['ic'] = '@class.inner',
-        },
-      },
-      move = {
-        enable = true,
-        set_jumps = true, -- whether to set jumps in the jumplist
-        goto_next_start = {
-          [']m'] = '@function.outer',
-          [']]'] = '@class.outer',
-        },
-        goto_next_end = {
-          [']M'] = '@function.outer',
-          [']['] = '@class.outer',
-        },
-        goto_previous_start = {
-          ['[m'] = '@function.outer',
-          ['[['] = '@class.outer',
-        },
-        goto_previous_end = {
-          ['[M'] = '@function.outer',
-          ['[]'] = '@class.outer',
-        },
-      },
-      swap = {
-        enable = true,
-        swap_next = {
-          ['<leader>a'] = '@parameter.inner',
-        },
-        swap_previous = {
-          ['<leader>A'] = '@parameter.inner',
-        },
-      },
-    },
   }
 end, 0)
 
@@ -504,6 +455,15 @@ local on_attach = function(_, bufnr)
   nmap('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
   nmap('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
 
+  --harpoon stuff
+  nmap('<leader>a', require('harpoon.mark').add_file, '[A]dd file')
+  nmap('<C-e>', require('harpoon.ui').toggle_quick_menu, 'Open harpoon ui')
+
+  nmap('<C-h>', function() require('harpoon.ui').nav_file(1) end, 'Open file [1]')
+  nmap('<C-t>', function() require('harpoon.ui').nav_file(2) end, 'Open file [2]')
+  nmap('<C-n>', function() require('harpoon.ui').nav_file(3) end, 'Open file [3]')
+
+
   -- See `:help K` for why this keymap
   nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
   nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
@@ -527,11 +487,13 @@ require('which-key').register {
   ['<leader>c'] = { name = '[C]ode', _ = 'which_key_ignore' },
   ['<leader>d'] = { name = '[D]ocument', _ = 'which_key_ignore' },
   ['<leader>g'] = { name = '[G]it', _ = 'which_key_ignore' },
-  ['<leader>h'] = { name = 'More git', _ = 'which_key_ignore' },
   ['<leader>r'] = { name = '[R]ename', _ = 'which_key_ignore' },
   ['<leader>s'] = { name = '[S]earch', _ = 'which_key_ignore' },
   ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
 }
+
+
+
 
 -- mason-lspconfig requires that these setup functions are called in this order
 -- before setting up the servers.
