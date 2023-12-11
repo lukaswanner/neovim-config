@@ -158,6 +158,7 @@ require('lazy').setup({
     'rose-pine/neovim',
     name = 'rose-pine',
     opts = {
+      disable_italics = true,
       highlight_groups = {
         CursorLineNr = { fg = '#ff99cc' },
       }
