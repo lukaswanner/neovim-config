@@ -2,6 +2,8 @@ require("lukas.set")
 require("lukas.remap")
 
 require("lukas.lazy_init")
+local builtin = require('telescope.builtin')
+
 
 local augroup = vim.api.nvim_create_augroup
 local LukasGroup = augroup('Lukas', {})
@@ -10,47 +12,52 @@ local autocmd = vim.api.nvim_create_autocmd
 local yank_group = augroup('HighlightYank', {})
 
 function R(name)
-    require("plenary.reload").reload_module(name)
+  require("plenary.reload").reload_module(name)
 end
 
 vim.filetype.add({
-    extension = {
-        templ = 'templ',
-    }
+  extension = {
+    templ = 'templ',
+  }
 })
 
 autocmd('TextYankPost', {
-    group = yank_group,
-    pattern = '*',
-    callback = function()
-        vim.highlight.on_yank({
-            higroup = 'IncSearch',
-            timeout = 40,
-        })
-    end,
+  group = yank_group,
+  pattern = '*',
+  callback = function()
+    vim.highlight.on_yank({
+      higroup = 'IncSearch',
+      timeout = 40,
+    })
+  end,
 })
 
-autocmd({"BufWritePre"}, {
-    group = LukasGroup,
-    pattern = "*",
-    command = [[%s/\s\+$//e]],
+autocmd({ "BufWritePre" }, {
+  group = LukasGroup,
+  pattern = "*",
+  command = [[%s/\s\+$//e]],
 })
 
 autocmd('LspAttach', {
-    group = LukasGroup,
-    callback = function(e)
-        local opts = { buffer = e.buf }
-        vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, opts)
-        vim.keymap.set("n", "K", function() vim.lsp.buf.hover() end, opts)
-        vim.keymap.set("n", "<leader>vws", function() vim.lsp.buf.workspace_symbol() end, opts)
-        vim.keymap.set("n", "<leader>vd", function() vim.diagnostic.open_float() end, opts)
-        vim.keymap.set("n", "<leader>vca", function() vim.lsp.buf.code_action() end, opts)
-        vim.keymap.set("n", "<leader>vrr", function() vim.lsp.buf.references() end, opts)
-        vim.keymap.set("n", "<leader>vrn", function() vim.lsp.buf.rename() end, opts)
-        vim.keymap.set("i", "<C-h>", function() vim.lsp.buf.signature_help() end, opts)
-        vim.keymap.set("n", "[d", function() vim.diagnostic.goto_next() end, opts)
-        vim.keymap.set("n", "]d", function() vim.diagnostic.goto_prev() end, opts)
-    end
+  group = LukasGroup,
+  callback = function(e)
+    local opts = { buffer = e.buf }
+    vim.keymap.set('n', 'gd', builtin.lsp_definitions)
+    vim.keymap.set('n', 'gD', vim.lsp.buf.declaration)
+    vim.keymap.set('n', 'gr', builtin.lsp_references)
+    vim.keymap.set('n', 'gI', builtin.lsp_implementations)
+
+    vim.keymap.set("n", "K", function() vim.lsp.buf.hover() end, opts)
+    vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help)
+
+    vim.keymap.set("n", "<leader>vws", function() vim.lsp.buf.workspace_symbol() end, opts)
+    vim.keymap.set("n", "<leader>e", function() vim.diagnostic.open_float() end, opts)
+    vim.keymap.set("n", "<leader>ca", function() vim.lsp.buf.code_action() end, opts)
+    vim.keymap.set("n", "<leader>rn", function() vim.lsp.buf.references() end, opts)
+    vim.keymap.set("i", "<C-h>", function() vim.lsp.buf.signature_help() end, opts)
+    vim.keymap.set("n", "[d", function() vim.diagnostic.goto_next() end, opts)
+    vim.keymap.set("n", "]d", function() vim.diagnostic.goto_prev() end, opts)
+  end
 })
 
 vim.g.netrw_browse_split = 0
