@@ -22,12 +22,19 @@ return {
         end
       end
 
+      local function truncate_filename(filename)
+        local _, _, truncated_filename = string.find(filename, ".([^/]+/[^/]+)$")
+        return truncated_filename
+      end
+
       require("lualine").setup({
         options = {
           theme = "rose-pine",
           globalstatus = true,
-          component_separators = { left = "█", right = "█" },
-          section_separators = { left = "█", right = "█" },
+          --[[ component_separators = { left = "█", right = "█" },
+          section_separators = { left = "█", right = "█" }, ]]
+          section_separators = "",
+          component_separators = "",
         },
         sections = {
           lualine_b = {
@@ -36,7 +43,7 @@ return {
             "diagnostics",
           },
           lualine_c = {
-            { "filename", path = 1 },
+            { "filename", path=1, fmt = truncate_filename },
           },
           lualine_x = {
             "filetype",
