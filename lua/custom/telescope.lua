@@ -3,6 +3,9 @@ local actions = require("telescope.actions")
 require("telescope").setup({
 	extensions = {
 		wrap_results = true,
+		["ui-select"] = {
+			require("telescope.themes").get_dropdown(),
+		},
 	},
 	defaults = {
 		mappings = {

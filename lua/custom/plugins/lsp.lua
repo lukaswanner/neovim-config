@@ -38,7 +38,9 @@ return {
 				svelte = true,
 				templ = true,
 				cssls = true,
-                pyright = true,
+				pyright = true,
+				eslint = true,
+				["tailwindcss-language-server"] = true,
 
 				-- Probably want to disable formatting for this lang server
 				tsserver = true,
@@ -65,14 +67,23 @@ return {
 				},
 			}
 
+			local servers_to_install = vim.tbl_filter(function(key)
+				local t = servers[key]
+				if type(t) == "table" then
+					return not t.manual_install
+				else
+					return t
+				end
+			end, vim.tbl_keys(servers))
+
 			require("mason").setup()
 			local ensure_installed = {
 				"stylua",
 				"lua_ls",
-				"tsserver",
-				"rust_analyzer",
+				"delve",
 			}
 
+			vim.list_extend(ensure_installed, servers_to_install)
 			require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
 
 			for name, config in pairs(servers) do
