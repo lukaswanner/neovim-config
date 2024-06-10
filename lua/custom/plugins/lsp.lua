@@ -40,7 +40,8 @@ return {
 				cssls = true,
 				pyright = true,
 				eslint = true,
-				["tailwindcss-language-server"] = true,
+                html = true,
+				tailwindcss = true,
 
 				-- Probably want to disable formatting for this lang server
 				tsserver = true,
