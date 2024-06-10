@@ -1,4 +1,5 @@
 local opt = vim.opt
+local wo = vim.wo
 
 opt.guicursor = ""
 
@@ -44,4 +45,6 @@ opt.updatetime = 250
 opt.showmode = false
 
 -- enable break indent so broken lines have the same indention level
+wo.wrap = true
+wo.linebreak = true
 opt.breakindent = true
