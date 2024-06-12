@@ -35,8 +35,8 @@ opt.cursorlineopt = "number,line"
 -- preview substitutions live (:s)
 opt.inccommand = "split"
 -- split settings
-opt.splitbelow = true
-opt.splitright = true
+-- opt.splitbelow = true
+-- opt.splitright = true
 
 -- Decrease update time
 opt.updatetime = 250
