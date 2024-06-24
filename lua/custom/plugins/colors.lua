@@ -1,5 +1,5 @@
 function ColorMyPencils(color)
-	color = color or "rose-pine"
+	color = color or "tokyonight"
 	vim.cmd.colorscheme(color)
 
 	-- set bg to terminal bg color
