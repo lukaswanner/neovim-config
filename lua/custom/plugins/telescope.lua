@@ -1,7 +1,8 @@
 return {
 	"nvim-telescope/telescope.nvim",
 
-	tag = "0.1.6",
+	event = "VimEnter",
+	branch = "0.1.x",
 
 	dependencies = {
 		"nvim-lua/plenary.nvim",
@@ -12,6 +13,7 @@ return {
 				return vim.fn.executable("make") == 1
 			end,
 		},
+		{ "nvim-telescope/telescope-ui-select.nvim" },
 	},
 
 	config = function()

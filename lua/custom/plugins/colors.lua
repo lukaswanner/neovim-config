@@ -1,5 +1,5 @@
 function ColorMyPencils(color)
-	color = color or "tokyonight"
+	color = color or "rose-pine"
 	vim.cmd.colorscheme(color)
 
 	-- set bg to terminal bg color
@@ -39,7 +39,7 @@ return {
 		name = "rose-pine",
 		config = function()
 			require("rose-pine").setup({
-				variant = "dawn",
+				--variant = "dawn",
 				disable_background = false,
 			})
 

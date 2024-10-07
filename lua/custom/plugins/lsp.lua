@@ -28,7 +28,13 @@ return {
 				capabilities = require("cmp_nvim_lsp").default_capabilities()
 			end
 
-			local lspconfig = require("lspconfig")
+			require("mason").setup()
+			local ensure_installed = {
+				"stylua",
+				"lua_ls",
+				"delve",
+                "ts_ls"
+			}
 
 			local servers = {
 				bashls = true,
@@ -42,9 +48,10 @@ return {
 				eslint = true,
 				html = true,
 				tailwindcss = true,
+				sqlls = true,
 
 				-- Probably want to disable formatting for this lang server
-				tsserver = true,
+				ts_ls = true,
 
 				jsonls = {
 					settings = {
@@ -77,15 +84,10 @@ return {
 				end
 			end, vim.tbl_keys(servers))
 
-			require("mason").setup()
-			local ensure_installed = {
-				"stylua",
-				"lua_ls",
-				"delve",
-			}
-
 			vim.list_extend(ensure_installed, servers_to_install)
 			require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
+
+			local lspconfig = require("lspconfig")
 
 			for name, config in pairs(servers) do
 				if config == true then
