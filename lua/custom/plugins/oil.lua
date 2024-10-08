@@ -1,24 +1,27 @@
 return {
-	{
-		"stevearc/oil.nvim",
-		dependencies = { { "echasnovski/mini.icons", opts = {} } },
-		config = function()
-			require("oil").setup({
-				columns = { "icon" },
-				keymaps = {
-					["<C-h>"] = false,
-					["<M-h>"] = "actions.select_split",
-				},
-				view_options = {
-					show_hidden = true,
-				},
-			})
 
-			-- Open parent directory in current window
-			vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
+	"stevearc/oil.nvim",
 
-			-- Open parent directory in floating window
-			vim.keymap.set("n", "<space>-", require("oil").toggle_float)
-		end,
-	},
+	---@module 'oil'
+	---@type oil.SetupOpts
+	opts = {},
+	-- Optional dependencies
+	dependencies = { { "nvim-tree/nvim-web-devicons" } },
+	config = function()
+		require("oil").setup({
+			view_options = {
+				show_hidden = true,
+			},
+			columns = {
+				"icon",
+				"permissions",
+			},
+		})
+
+		-- Open parent directory in current window
+		vim.keymap.set("n", "-", "<CMD>Oil<CR>")
+
+		-- Open parent directory in floating window
+		vim.keymap.set("n", "<space>-", require("oil").toggle_float)
+	end,
 }
