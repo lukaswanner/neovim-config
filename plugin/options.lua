@@ -22,7 +22,6 @@ opt.incsearch = true
 vim.o.ignorecase = true
 vim.o.smartcase = true
 
-
 opt.termguicolors = true
 opt.scrolloff = 10
 opt.signcolumn = "yes"
