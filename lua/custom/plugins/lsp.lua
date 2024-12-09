@@ -33,7 +33,7 @@ return {
 				"stylua",
 				"lua_ls",
 				"delve",
-                "ts_ls"
+				"ts_ls",
 			}
 
 			local servers = {
@@ -141,6 +141,11 @@ return {
 					local filetype = vim.bo[bufnr].filetype
 					if disable_semantic_tokens[filetype] then
 						client.server_capabilities.semanticTokensProvider = nil
+					end
+
+					-- add navic to lsp
+					if client.server_capabilities.documentSymbolProvider then
+						require("nvim-navic").attach(client, bufnr)
 					end
 				end,
 			})

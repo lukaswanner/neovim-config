@@ -1,5 +1,5 @@
 function ColorMyPencils(color)
-	color = color or "rose-pine"
+	color = color or "tokyonight"
 	vim.cmd.colorscheme(color)
 
 	-- set bg to terminal bg color
@@ -14,13 +14,14 @@ return {
 	{
 		"folke/tokyonight.nvim",
 		name = "tokyonight",
+		priority = 1000,
 		config = function()
 			require("tokyonight").setup({
 				-- your configuration comes here
 				-- or leave it empty to use the default settings
-				style = "night", -- The theme comes in three styles, `storm`, `moon`, a darker variant `night` and `day`
+				style = "storm", -- The theme comes in three styles, `storm`, `moon`, a darker variant `night` and `day`
 				transparent = false, -- Enable this to disable setting the background color
-				terminal_colors = true, -- Configure the colors used when opening a `:terminal` in Neovim
+				terminal_colors = false, -- Configure the colors used when opening a `:terminal` in Neovim
 				styles = {
 					-- Style to be applied to different syntax groups
 					-- Value is any valid attr-list value for `:help nvim_set_hl`
@@ -37,13 +38,12 @@ return {
 	{
 		"rose-pine/neovim",
 		name = "rose-pine",
+		priority = 1000,
 		config = function()
 			require("rose-pine").setup({
 				--variant = "dawn",
 				disable_background = false,
 			})
-
-			vim.cmd("colorscheme rose-pine")
 
 			ColorMyPencils()
 		end,
