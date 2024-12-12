@@ -6,6 +6,8 @@ require("telescope").setup({
 		["ui-select"] = {
 			require("telescope.themes").get_dropdown(),
 		},
+		fzf = {},
+		smart_history = {},
 	},
 	defaults = {
 		mappings = {
@@ -31,7 +33,6 @@ vim.keymap.set("n", "<space>fb", function()
 	builtin.git_branches()
 end)
 vim.keymap.set("n", "<space>fh", builtin.help_tags)
-vim.keymap.set("n", "<space>fg", builtin.live_grep)
 vim.keymap.set("n", "<leader>fw", builtin.grep_string)
 vim.keymap.set("n", "<space>/", function()
 	builtin.current_buffer_fuzzy_find(require("telescope.themes").get_dropdown({
