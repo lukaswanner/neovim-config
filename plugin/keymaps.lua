@@ -28,11 +28,6 @@ set("n", "<C-f>", "<cmd>silent !tmux neww tmux-sessionizer<CR>")
 -- rename word under cursor
 set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
 
--- source current file
-set("n", "<leader><leader>", function()
-	vim.cmd("so")
-end)
-
 -- Basic movement keybinds, these make navigating splits easy for me
 set("n", "<C-j>", "<c-w><c-j>")
 set("n", "<C-k>", "<c-w><c-k>")
@@ -40,7 +35,13 @@ set("n", "<C-l>", "<c-w><c-l>")
 set("n", "<C-h>", "<c-w><c-h>")
 
 -- Remap for dealing with word wrap
-set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
-set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
-set('v', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
-set('v', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
+set("n", "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
+set("n", "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
+set("v", "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
+set("v", "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
+
+-- execute lua
+set("v", "<space>x", ":lua<CR>")
+
+-- source file
+set("n", "<space><space>x", "<cmd>source %<CR>")
