@@ -44,4 +44,7 @@ set("v", "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 set("v", "<space>x", ":lua<CR>")
 
 -- source file
-set("n", "<space><space>x", "<cmd>source %<CR>")
+set("n", "<space><space>", "<cmd>source %<CR>")
+
+-- escape terminal mode
+set("t", "<esc><esc>", "<c-\\><c-n>")

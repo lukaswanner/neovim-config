@@ -2,6 +2,7 @@ local opt = vim.opt
 local wo = vim.wo
 
 opt.guicursor = ""
+opt.termguicolors = true
 
 -- numbers
 opt.number = true
@@ -47,3 +48,12 @@ opt.showmode = false
 wo.wrap = true
 wo.linebreak = true
 opt.breakindent = true
+
+-- remove stuff from terminal
+vim.api.nvim_create_autocmd("TermOpen", {
+	group = vim.api.nvim_create_augroup("custom-term-open", { clear = true }),
+	callback = function()
+		vim.opt.number = false
+		vim.opt.relativenumber = false
+	end,
+})
