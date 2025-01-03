@@ -1,5 +1,5 @@
 function ColorMyPencils(color)
-	color = color or "tokyonight"
+	color = color or "nightfox"
 	vim.cmd.colorscheme(color)
 
 	-- set bg to terminal bg color
@@ -7,7 +7,7 @@ function ColorMyPencils(color)
 	-- vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
 
 	-- set line number
-	vim.api.nvim_set_hl(0, "CursorLineNr", { fg = "#9ECE6A" })
+	-- vim.api.nvim_set_hl(0, "CursorLineNr", { fg = "#9ECE6A" })
 end
 
 return {
@@ -36,6 +36,14 @@ return {
 	},
 
 	{
+		"EdenEast/nightfox.nvim",
+		name = "nightfox",
+		priority = 1000,
+		-- configuration is optional!
+		opts = {},
+	},
+
+	{
 		"rose-pine/neovim",
 		name = "rose-pine",
 		priority = 1000,
@@ -44,7 +52,6 @@ return {
 				--variant = "dawn",
 				disable_background = false,
 			})
-
 			ColorMyPencils()
 		end,
 	},
