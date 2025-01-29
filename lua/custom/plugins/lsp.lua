@@ -34,6 +34,7 @@ return {
 				"lua_ls",
 				"delve",
 				"ts_ls",
+				"zls",
 			}
 
 			local servers = {
@@ -49,6 +50,7 @@ return {
 				html = true,
 				tailwindcss = true,
 				sqlls = true,
+				zls = true,
 
 				-- Probably want to disable formatting for this lang server
 				ts_ls = true,
