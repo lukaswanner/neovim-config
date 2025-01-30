@@ -23,10 +23,8 @@ return {
 				-- },
 			})
 
-			local capabilities = nil
-			if pcall(require, "cmp_nvim_lsp") then
-				capabilities = require("cmp_nvim_lsp").default_capabilities()
-			end
+			local capabilities = vim.lsp.protocol.make_client_capabilities()
+			capabilities = vim.tbl_deep_extend("force", capabilities, require("cmp_nvim_lsp").default_capabilities())
 
 			require("mason").setup()
 			local ensure_installed = {
@@ -123,22 +121,27 @@ return {
 					local bufnr = args.buf
 					local client = assert(vim.lsp.get_client_by_id(args.data.client_id), "must have valid client")
 
-					vim.opt_local.omnifunc = "v:lua.vim.lsp.omnifunc"
-					vim.keymap.set("n", "gd", vim.lsp.buf.definition, { buffer = 0 })
-					vim.keymap.set("n", "gr", vim.lsp.buf.references, { buffer = 0 })
-					vim.keymap.set("n", "gD", vim.lsp.buf.declaration, { buffer = 0 })
-					vim.keymap.set("n", "gT", vim.lsp.buf.type_definition, { buffer = 0 })
-					vim.keymap.set("n", "K", vim.lsp.buf.hover, { buffer = 0 })
-					vim.keymap.set("i", "<C-k>", vim.lsp.buf.signature_help)
+					local map = function(mode, keys, func)
+						vim.keymap.set(mode, keys, func, { buffer = args.buf })
+					end
 
-					vim.keymap.set("n", "<space>rn", vim.lsp.buf.rename, { buffer = 0 })
-					vim.keymap.set("n", "<space>ca", vim.lsp.buf.code_action, { buffer = 0 })
-					vim.keymap.set("n", "<leader>e", function()
+					vim.opt_local.omnifunc = "v:lua.vim.lsp.omnifunc"
+					map("n", "gd", vim.lsp.buf.definition)
+					map("n", "gr", vim.lsp.buf.references)
+					map("n", "gD", vim.lsp.buf.declaration)
+					map("n", "gT", vim.lsp.buf.type_definition)
+					map("n", "K", vim.lsp.buf.hover)
+
+					map("i", "<C-k>", vim.lsp.buf.signature_help)
+
+					map("n", "<space>rn", vim.lsp.buf.rename)
+					map("n", "<space>ca", vim.lsp.buf.code_action)
+					map("n", "<leader>e", function()
 						vim.diagnostic.open_float()
-					end, { buffer = 0 })
-					vim.keymap.set("n", "<leader>f", function()
+					end)
+					map("n", "<leader>f", function()
 						require("conform").format({ async = true, lsp_fallback = true })
-					end, { buffer = 0 })
+					end)
 
 					local filetype = vim.bo[bufnr].filetype
 					if disable_semantic_tokens[filetype] then
@@ -148,6 +151,16 @@ return {
 					-- add navic to lsp
 					if client.server_capabilities.documentSymbolProvider then
 						require("nvim-navic").attach(client, bufnr)
+					end
+
+					-- The following autocommand is used to enable inlay hints in your
+					-- code, if the language server you are using supports them
+					--
+					-- This may be unwanted, since they displace some of your code
+					if client and client.server_capabilities.inlayHintProvider and vim.lsp.inlay_hint then
+						map("n", "<leader>th", function()
+							vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
+						end)
 					end
 				end,
 			})

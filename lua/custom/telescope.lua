@@ -41,6 +41,8 @@ vim.keymap.set("n", "<space>/", function()
 	}))
 end)
 
+vim.keymap.set("n", "<leader><leader>", builtin.buffers, { desc = "[ ] Find existing buffers" })
+
 vim.keymap.set("n", "<space>gw", builtin.grep_string)
 
 vim.keymap.set("n", "<leader>fn", function()

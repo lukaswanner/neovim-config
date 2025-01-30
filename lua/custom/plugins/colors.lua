@@ -1,5 +1,5 @@
 function ColorMyPencils(color)
-	color = color or "nightfox"
+	color = color or "gruvbox"
 	vim.cmd.colorscheme(color)
 
 	-- set bg to terminal bg color
@@ -53,6 +53,15 @@ return {
 				disable_background = false,
 			})
 			ColorMyPencils()
+		end,
+	},
+
+	{
+		"ellisonleao/gruvbox.nvim",
+		name = "gruvbox",
+		priority = 1000,
+		config = function()
+			require("gruvbox").setup({})
 		end,
 	},
 }
