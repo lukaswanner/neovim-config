@@ -11,37 +11,37 @@ return {
 				return branch
 			end
 
-			local hide_in_width = function()
-				return vim.fn.winwidth(0) > 80
+			local function split(inputstr, sep)
+				if sep == nil then
+					sep = "%s"
+				end
+				local t = {}
+				for str in string.gmatch(inputstr, "([^" .. sep .. "]+)") do
+					table.insert(t, str)
+				end
+				return t
 			end
 
 			--- returns me the file name with max depth 1 -> parentdir/filename
 			---@param filename string string the current path / filename
 			---@return string truncated string
-			local function truncate_filename(filename)
-				local start, _ = string.find(filename, ".([^/]+/[^/]+)$")
-				if not start then
-					return filename
+			local function truncate_path(filename)
+				local a = split(filename, "/")
+				local final_str = ""
+				for _, line in ipairs(a) do
+					if string.len(line) >= 5 then
+						final_str = final_str .. "/" .. string.sub(line, 1, 5)
+					else
+						final_str = final_str .. "/" .. line
+					end
 				end
-				return string.sub(filename, start + 1)
+				return final_str
 			end
 
 			local branch = {
 				"branch",
 				icon = "",
 				fmt = truncate_branch_name,
-			}
-
-			local diff = {
-				"diff",
-				colored = true,
-				diff_color = {
-					added = { fg = "#2DA44E" },
-					modified = { fg = "#A555C2" },
-					removed = { fg = "#FA4549" },
-				},
-				symbols = { added = " ", modified = " ", removed = " " }, -- changes diff symbols
-				cond = hide_in_width,
 			}
 
 			local diagnostics = {
@@ -54,17 +54,32 @@ return {
 
 			local filename = {
 				"filename",
-				path = 1,
-				fmt = truncate_filename,
+				path = 2,
+				fmt = truncate_path,
 			}
 
 			local filetype = {
 				"filetype",
 			}
 
-			local location = {
-				"location",
-				padding = 1,
+			local mode_map = {
+				["NORMAL"] = "N",
+				["O-PENDING"] = "N?",
+				["INSERT"] = "I",
+				["VISUAL"] = "V",
+				["V-BLOCK"] = "V-B",
+				["V-LINE"] = "V-L",
+				["V-REPLACE"] = "V-R",
+				["REPLACE"] = "R",
+				["COMMAND"] = "!",
+				["SHELL"] = "SH",
+				["TERMINAL"] = "T",
+				["EX"] = "X",
+				["S-BLOCK"] = "S-B",
+				["S-LINE"] = "S-L",
+				["SELECT"] = "S",
+				["CONFIRM"] = "Y?",
+				["MORE"] = "M",
 			}
 
 			require("lualine").setup({
@@ -75,21 +90,17 @@ return {
 					component_separators = "󰇙",
 				},
 				sections = {
-					lualine_a = { "mode" },
-					lualine_b = { branch },
-					lualine_c = {
+					lualine_a = {
 						{
-							function()
-								return require("nvim-navic").get_location()
-							end,
-							cond = function()
-								return require("nvim-navic").is_available()
+							"mode",
+							fmt = function(s)
+								return mode_map[s] or s
 							end,
 						},
 					},
-					lualine_x = { filename, diff, diagnostics, filetype },
-					lualine_y = { location },
-					lualine_z = { "progress" },
+					lualine_b = { branch },
+					lualine_c = { filename },
+					lualine_x = { diagnostics, filetype },
 				},
 			})
 		end,
