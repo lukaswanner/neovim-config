@@ -28,8 +28,8 @@ return {
 			local function truncate_path(filename)
 				local a = split(filename, "/")
 				local final_str = ""
-				for _, line in ipairs(a) do
-					if string.len(line) >= 5 then
+				for i, line in ipairs(a) do
+					if i ~= #a and string.len(line) >= 5 then
 						final_str = final_str .. "/" .. string.sub(line, 1, 5)
 					else
 						final_str = final_str .. "/" .. line
