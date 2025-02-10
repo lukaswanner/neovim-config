@@ -1,5 +1,7 @@
 local opt = vim.opt
 local wo = vim.wo
+local g = vim.g
+local env = vim.env
 
 opt.guicursor = ""
 opt.termguicolors = true
@@ -53,7 +55,37 @@ opt.breakindent = true
 vim.api.nvim_create_autocmd("TermOpen", {
 	group = vim.api.nvim_create_augroup("custom-term-open", { clear = true }),
 	callback = function()
-		vim.opt.number = false
-		vim.opt.relativenumber = false
+		opt.number = false
+		opt.relativenumber = false
 	end,
 })
+
+-- enable osc52 clipboard support
+g.clipboard = {
+	name = "OSC 52",
+	copy = {
+		["+"] = require("vim.ui.clipboard.osc52").copy("+"),
+		["*"] = require("vim.ui.clipboard.osc52").copy("*"),
+	},
+	paste = {
+		["+"] = require("vim.ui.clipboard.osc52").paste("+"),
+		["*"] = require("vim.ui.clipboard.osc52").paste("*"),
+	},
+}
+
+if env.TMUX ~= nil then
+	local copy = { "tmux", "load-buffer", "-w", "-" }
+	local paste = { "bash", "-c", "tmux refresh-client -l && sleep 0.05 && tmux save-buffer -" }
+	g.clipboard = {
+		name = "tmux",
+		copy = {
+			["+"] = copy,
+			["*"] = copy,
+		},
+		paste = {
+			["+"] = paste,
+			["*"] = paste,
+		},
+		cache_enabled = 0,
+	}
+end
