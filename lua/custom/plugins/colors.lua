@@ -1,5 +1,5 @@
 function ColorMyPencils(color)
-	color = color or "gruvbox"
+	color = color or "rose-pine"
 	vim.cmd.colorscheme(color)
 
 	-- set bg to terminal bg color
@@ -51,6 +51,9 @@ return {
 			require("rose-pine").setup({
 				--variant = "dawn",
 				disable_background = false,
+				styles = {
+					italic = false,
+				},
 			})
 			ColorMyPencils()
 		end,

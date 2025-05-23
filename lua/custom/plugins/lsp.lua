@@ -148,11 +148,6 @@ return {
 						client.server_capabilities.semanticTokensProvider = nil
 					end
 
-					-- add navic to lsp
-					if client.server_capabilities.documentSymbolProvider then
-						require("nvim-navic").attach(client, bufnr)
-					end
-
 					-- The following autocommand is used to enable inlay hints in your
 					-- code, if the language server you are using supports them
 					--
