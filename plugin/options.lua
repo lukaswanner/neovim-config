@@ -22,6 +22,7 @@ opt.undofile = true
 -- search settings
 opt.hlsearch = false
 opt.incsearch = true
+opt.wrapscan = false
 vim.o.ignorecase = true
 vim.o.smartcase = true
 
