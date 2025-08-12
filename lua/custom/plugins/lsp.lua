@@ -127,11 +127,13 @@ return {
 
 					vim.opt_local.omnifunc = "v:lua.vim.lsp.omnifunc"
 					map("n", "gd", vim.lsp.buf.definition)
+					map("n", "gI", vim.lsp.buf.implementation)
 					map("n", "gr", vim.lsp.buf.references)
 					map("n", "gD", vim.lsp.buf.declaration)
 					map("n", "gT", vim.lsp.buf.type_definition)
 					map("n", "K", vim.lsp.buf.hover)
 
+					map("n", "<C-k>", vim.lsp.buf.signature_help)
 					map("i", "<C-k>", vim.lsp.buf.signature_help)
 
 					map("n", "<space>rn", vim.lsp.buf.rename)
